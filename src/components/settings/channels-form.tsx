@@ -1,75 +1,94 @@
-'use client'
+"use client"
 
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Icons } from '@/components/icons'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { toast } from "sonner"
 
-interface ChannelButtonProps {
+interface Channel {
+  id: string
   name: string
-  icon: keyof typeof Icons
-  connected?: boolean
-  onClick: () => void
+  description: string
+  enabled: boolean
 }
 
-function ChannelButton({ name, icon, connected, onClick }: ChannelButtonProps) {
-  const Icon = Icons[icon]
-  return (
-    <Card className="p-4">
-      <Button
-        variant={connected ? "secondary" : "outline"}
-        className="w-full h-24 flex flex-col items-center justify-center gap-2"
-        onClick={onClick}
-      >
-        <Icon className="h-8 w-8" />
-        <span>{name}</span>
-        <span className="text-xs text-muted-foreground">
-          {connected ? "Connected" : "Connect"}
-        </span>
-      </Button>
-    </Card>
-  )
-}
+const defaultChannels: Channel[] = [
+  {
+    id: "email",
+    name: "Email Notifications",
+    description: "Receive email notifications for important updates",
+    enabled: true,
+  },
+  {
+    id: "push",
+    name: "Push Notifications",
+    description: "Get push notifications on your device",
+    enabled: false,
+  },
+  {
+    id: "sms",
+    name: "SMS Notifications",
+    description: "Receive SMS notifications for critical alerts",
+    enabled: false,
+  },
+]
 
 export function ChannelsForm() {
-  const handleConnect = (channel: string) => {
-    // TODO: Implement channel connection logic
-    console.log(`Connecting to ${channel}...`)
+  const [channels, setChannels] = useState<Channel[]>(defaultChannels)
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function onSubmit() {
+    setIsLoading(true)
+
+    try {
+      const response = await fetch("/api/user/settings/channels", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ channels }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update channel settings")
+      }
+
+      toast.success("Channel settings updated!")
+    } catch (error) {
+      toast.error("Something went wrong")
+      console.error("Error updating channel settings:", error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <ChannelButton
-          name="WhatsApp"
-          icon="message"
-          onClick={() => handleConnect('whatsapp')}
-        />
-        <ChannelButton
-          name="Messenger"
-          icon="mail"
-          onClick={() => handleConnect('messenger')}
-        />
-        <ChannelButton
-          name="SMS"
-          icon="message"
-          onClick={() => handleConnect('sms')}
-        />
-        <ChannelButton
-          name="Telegram"
-          icon="message"
-          onClick={() => handleConnect('telegram')}
-        />
-        <ChannelButton
-          name="Slack"
-          icon="message"
-          onClick={() => handleConnect('slack')}
-        />
-        <ChannelButton
-          name="Discord"
-          icon="message"
-          onClick={() => handleConnect('discord')}
-        />
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="space-y-8">
+      <div className="space-y-4">
+        {channels.map((channel) => (
+          <div key={channel.id} className="flex items-center justify-between space-x-4 rounded-lg border p-4">
+            <div className="space-y-0.5">
+              <Label htmlFor={channel.id}>{channel.name}</Label>
+              <p className="text-sm text-muted-foreground">
+                {channel.description}
+              </p>
+            </div>
+            <Switch
+              id={channel.id}
+              checked={channel.enabled}
+              onCheckedChange={(checked) => {
+                setChannels(channels.map((c) =>
+                  c.id === channel.id ? { ...c, enabled: checked } : c
+                ))
+              }}
+            />
+          </div>
+        ))}
       </div>
-    </div>
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Saving..." : "Save Changes"}
+      </Button>
+    </form>
   )
 } 

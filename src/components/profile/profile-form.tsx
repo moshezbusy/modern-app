@@ -11,11 +11,20 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { AvatarUpload } from './avatar-upload'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 
 const profileFormSchema = z.object({
   name: z.string().min(2).max(30),
   email: z.string().email(),
-  bio: z.string().max(500).optional(),
+  bio: z.string().max(160).optional(),
+  image: z.string().url().optional()
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
@@ -73,61 +82,64 @@ export function ProfileForm({ user }: ProfileFormProps) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-4">
-        <AvatarUpload currentImage={image} onImageChange={setImage} />
-
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            type="text"
-            {...form.register('name')}
-            placeholder="Your name"
-            disabled={isLoading}
-          />
-          {form.formState.errors.name && (
-            <p className="text-sm text-destructive">
-              {form.formState.errors.name.message}
-            </p>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input {...field} disabled={isLoading} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            {...form.register('email')}
-            placeholder="Your email"
-            disabled={isLoading}
-          />
-          {form.formState.errors.email && (
-            <p className="text-sm text-destructive">
-              {form.formState.errors.email.message}
-            </p>
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} disabled={isLoading} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="bio">Bio</Label>
-          <Textarea
-            id="bio"
-            {...form.register('bio')}
-            placeholder="Tell us about yourself"
-            disabled={isLoading}
-          />
-          {form.formState.errors.bio && (
-            <p className="text-sm text-destructive">
-              {form.formState.errors.bio.message}
-            </p>
+        />
+        <FormField
+          control={form.control}
+          name="bio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bio</FormLabel>
+              <FormControl>
+                <Textarea {...field} disabled={isLoading} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </div>
-      </div>
-
-      <Button type="submit" disabled={isLoading}>
-        {isLoading ? 'Saving...' : 'Save changes'}
-      </Button>
-    </form>
+        />
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profile Image</FormLabel>
+              <FormControl>
+                <AvatarUpload currentImage={image} onImageChange={setImage} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save changes'}
+        </Button>
+      </form>
+    </Form>
   )
 } 

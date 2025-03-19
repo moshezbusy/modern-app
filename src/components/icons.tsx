@@ -6,6 +6,8 @@ import {
   MessageSquare,
   Inbox,
   Mail,
+  Home,
+  BarChart,
 } from 'lucide-react'
 
 export const Icons = {
@@ -16,4 +18,6 @@ export const Icons = {
   message: MessageSquare,
   inbox: Inbox,
   mail: Mail,
+  home: Home,
+  barChart: BarChart,
 } 

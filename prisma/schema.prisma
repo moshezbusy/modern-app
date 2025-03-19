@@ -57,8 +57,14 @@ model User {
   twoFactorEnabled      Boolean  @default(false)
   language              String?  @default("en")
   timezone              String?  @default("UTC")
+  channelPreferences    Json?
   accounts              Account[]
   sessions              Session[]
+  role                  String    @default("agent") // admin, agent, supervisor
+  channels              Json?     // Assigned channels
+  metadata              Json?     // Additional user settings
+  organization          Organization? @relation(fields: [organizationId], references: [id])
+  organizationId        String?
 }
 
 model VerificationToken {
@@ -67,4 +73,132 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Channel Types
+enum ChannelType {
+  WHATSAPP
+  MESSENGER
+  SMS
+  WEBCHAT
+  EMAIL
+}
+
+// Message Status
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+// Campaign Types
+enum CampaignType {
+  BROADCAST
+  DRIP
+  AUTOMATED
+}
+
+// Contact Models
+model Contact {
+  id              String    @id @default(cuid())
+  name            String
+  email           String?   @unique
+  phone           String?
+  tags            String[]
+  customFields    Json?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  messages        Message[]
+  campaigns       Campaign[] @relation("CampaignContacts")
+  notes           Note[]
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+}
+
+// Channel Configuration
+model Channel {
+  id              String    @id @default(cuid())
+  type            ChannelType
+  name            String
+  config          Json
+  enabled         Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  messages        Message[]
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+}
+
+// Messages
+model Message {
+  id              String    @id @default(cuid())
+  content         String
+  type            ChannelType
+  status          MessageStatus
+  metadata        Json?
+  sentAt          DateTime  @default(now())
+  channel         Channel   @relation(fields: [channelId], references: [id])
+  channelId       String
+  contact         Contact   @relation(fields: [contactId], references: [id])
+  contactId       String
+  campaign        Campaign? @relation(fields: [campaignId], references: [id])
+  campaignId      String?
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+}
+
+// Campaigns
+model Campaign {
+  id              String    @id @default(cuid())
+  name            String
+  type            CampaignType
+  content         Json
+  schedule        Json?
+  status          String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  messages        Message[]
+  contacts        Contact[] @relation("CampaignContacts")
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+}
+
+// Chatbots
+model Chatbot {
+  id              String    @id @default(cuid())
+  name            String
+  flow            Json
+  enabled         Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+}
+
+// Notes
+model Note {
+  id              String    @id @default(cuid())
+  content         String
+  contact         Contact   @relation(fields: [contactId], references: [id])
+  contactId       String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+}
+
+// Organization
+model Organization {
+  id              String    @id @default(cuid())
+  name            String
+  channels        Channel[]
+  contacts        Contact[]
+  messages        Message[]
+  campaigns       Campaign[]
+  chatbots        Chatbot[]
+  notes           Note[]
+  users           User[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 } 

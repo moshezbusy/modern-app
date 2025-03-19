@@ -79,7 +79,7 @@ export function SettingsForm({ name, email, image }: SettingsFormProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,7 +92,7 @@ export function SettingsForm({ name, email, image }: SettingsFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} disabled />
+                <Input {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
