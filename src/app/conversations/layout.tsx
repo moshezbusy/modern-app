@@ -17,16 +17,16 @@ export default function ConversationsLayout({
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden bg-background">
       {/* Filters Panel */}
       <div
         className={cn(
-          "flex h-full flex-col border-r bg-background transition-all duration-300",
+          "flex h-full flex-col border-r bg-background transition-all duration-300 ease-in-out",
           isFiltersPanelOpen ? "w-[240px]" : "w-0"
         )}
       >
         <div className="flex h-14 items-center justify-between border-b px-4">
-          <h2 className="font-semibold">Filters</h2>
+          <h2 className="font-semibold text-foreground">Filters</h2>
           <button
             onClick={() => setIsFiltersPanelOpen(false)}
             className="text-muted-foreground hover:text-foreground"
@@ -42,12 +42,12 @@ export default function ConversationsLayout({
       {/* Conversations List */}
       <div
         className={cn(
-          "flex h-full flex-col border-r bg-background transition-all duration-300",
-          isConversationListOpen ? "w-[400px]" : "w-0"
+          "flex h-full flex-col border-r bg-background transition-all duration-300 ease-in-out",
+          isConversationListOpen ? "w-[320px]" : "w-0"
         )}
       >
         <div className="flex h-14 items-center justify-between border-b px-4">
-          <h2 className="font-semibold">Conversations</h2>
+          <h2 className="font-semibold text-foreground">Conversations</h2>
           <button
             onClick={() => setIsConversationListOpen(false)}
             className="text-muted-foreground hover:text-foreground"
@@ -64,13 +64,13 @@ export default function ConversationsLayout({
       </div>
 
       {/* Chat Area */}
-      <div className="relative flex flex-1 flex-col bg-background">
+      <div className="relative flex flex-1 flex-col overflow-hidden bg-background">
         {/* Panel Toggle Buttons */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 space-y-2 z-10">
           {!isFiltersPanelOpen && (
             <button
               onClick={() => setIsFiltersPanelOpen(true)}
-              className="rounded-r-lg border border-l-0 bg-background p-1.5 text-muted-foreground hover:text-foreground"
+              className="rounded-r-lg border border-l-0 bg-background p-1.5 text-muted-foreground hover:text-foreground shadow-sm"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -78,7 +78,7 @@ export default function ConversationsLayout({
           {!isConversationListOpen && (
             <button
               onClick={() => setIsConversationListOpen(true)}
-              className="rounded-r-lg border border-l-0 bg-background p-1.5 text-muted-foreground hover:text-foreground"
+              className="rounded-r-lg border border-l-0 bg-background p-1.5 text-muted-foreground hover:text-foreground shadow-sm"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

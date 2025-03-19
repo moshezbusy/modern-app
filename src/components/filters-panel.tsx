@@ -38,10 +38,10 @@ export default function FiltersPanel() {
     <div className="flex h-full flex-col">
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-white/50" />
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search conversations..."
-          className="border-0 bg-white/5 pl-8 text-white placeholder:text-white/50"
+          className="border-0 bg-accent pl-8 text-foreground placeholder:text-muted-foreground"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -51,42 +51,42 @@ export default function FiltersPanel() {
       <div className="mt-6 flex-1 space-y-6 overflow-y-auto">
         {/* Inbox Filters */}
         <div className="space-y-1">
-          <h3 className="mb-2 flex items-center justify-between px-2 text-sm font-semibold text-white">
+          <h3 className="mb-2 flex items-center justify-between px-2 text-sm font-semibold text-foreground">
             <span>Inbox Filters</span>
-            <span className="text-xs text-white/50">−</span>
+            <span className="text-xs text-muted-foreground">−</span>
           </h3>
           {inboxFilters.map((filter) => (
             <button
               key={filter.id}
               onClick={() => setSelectedInboxFilter(filter.id)}
               className={cn(
-                "flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white",
-                selectedInboxFilter === filter.id && "bg-white/5 text-white"
+                "flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+                selectedInboxFilter === filter.id && "bg-accent text-foreground"
               )}
             >
               <span>{filter.label}</span>
-              <span className="text-xs text-white/50">{filter.count}</span>
+              <span className="text-xs text-muted-foreground">{filter.count}</span>
             </button>
           ))}
         </div>
 
         {/* Channel Filters */}
         <div className="space-y-1">
-          <h3 className="mb-2 flex items-center justify-between px-2 text-sm font-semibold text-white">
+          <h3 className="mb-2 flex items-center justify-between px-2 text-sm font-semibold text-foreground">
             <span>Channel Filters</span>
-            <span className="text-xs text-white/50">−</span>
+            <span className="text-xs text-muted-foreground">−</span>
           </h3>
           {channelFilters.map((filter) => (
             <button
               key={filter.id}
               onClick={() => setSelectedChannelFilter(filter.id)}
               className={cn(
-                "flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white",
-                selectedChannelFilter === filter.id && "bg-white/5 text-white"
+                "flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+                selectedChannelFilter === filter.id && "bg-accent text-foreground"
               )}
             >
               <span>{filter.label}</span>
-              <span className="text-xs text-white/50">{filter.count}</span>
+              <span className="text-xs text-muted-foreground">{filter.count}</span>
             </button>
           ))}
         </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { LucideIcon } from "lucide-react"
+import { ReactNode } from "react"
 
 interface ShortcutProps {
   label: string
@@ -12,14 +13,16 @@ interface EmptyStateProps {
   title: string
   description: string
   shortcuts?: ShortcutProps[]
+  icon?: ReactNode
 }
 
-export function EmptyState({ title, description, shortcuts }: EmptyStateProps) {
+export function EmptyState({ title, description, shortcuts, icon }: EmptyStateProps) {
   return (
     <div className="flex h-[400px] flex-col items-center justify-center space-y-4">
-      <div className="h-32 w-32">
-        {/* You can add an illustration here */}
-        <div className="h-full w-full rounded-full bg-accent opacity-20" />
+      <div className="h-32 w-32 flex items-center justify-center">
+        {icon || (
+          <div className="h-full w-full rounded-full bg-accent opacity-20" />
+        )}
       </div>
       <div className="text-center">
         <h3 className="text-lg font-semibold">{title}</h3>

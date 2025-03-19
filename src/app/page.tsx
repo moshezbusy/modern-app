@@ -18,11 +18,6 @@ export const metadata: Metadata = {
   description: "Omnichannel Communication System Dashboard",
 }
 
-export default function HomePage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Welcome to the App</h1>
-      <p className="mt-4 text-xl">Your communication platform is ready.</p>
-    </main>
-  );
+export default function Home() {
+  redirect("/conversations")
 } 

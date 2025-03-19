@@ -7,6 +7,7 @@ import { MainNav } from "@/components/main-nav"
 import { UserNav } from "@/components/user-nav"
 import { MobileNav } from "@/components/mobile-nav"
 import { Toaster } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 interface ClientLayoutProps {
   children: React.ReactNode
@@ -21,31 +22,33 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <div className="relative flex min-h-screen">
-          {/* Sidebar for desktop */}
-          <aside className="fixed hidden h-screen w-64 border-r bg-background md:flex md:flex-col">
-            <MainNav />
-          </aside>
+        <TooltipProvider>
+          <div className="relative flex min-h-screen">
+            {/* Sidebar for desktop */}
+            <aside className="fixed hidden h-screen w-[60px] border-r bg-background md:flex md:flex-col">
+              <MainNav />
+            </aside>
 
-          {/* Main content area */}
-          <div className="flex w-full flex-1 flex-col md:pl-64">
-            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="flex h-14 items-center px-4">
-                <MobileNav />
-                <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-                  <div className="w-full flex-1 md:w-auto md:flex-none">
-                    {/* Search component will go here */}
+            {/* Main content area */}
+            <div className="flex w-full flex-1 flex-col md:pl-[60px]">
+              <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="flex h-14 items-center px-4">
+                  <MobileNav />
+                  <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+                    <div className="w-full flex-1 md:w-auto md:flex-none">
+                      {/* Search component will go here */}
+                    </div>
+                    <UserNav />
                   </div>
-                  <UserNav />
                 </div>
-              </div>
-            </header>
-            <main className="flex-1 p-4">
-              {children}
-            </main>
+              </header>
+              <main className="flex-1 p-4">
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
-        <Toaster />
+          <Toaster />
+        </TooltipProvider>
       </ThemeProvider>
     </SessionProvider>
   )

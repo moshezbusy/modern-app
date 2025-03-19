@@ -9,9 +9,15 @@ import {
   Bot,
   BarChart,
   Settings,
-  Mail,
+  Megaphone,
   MessageCircle,
 } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const items = [
   {
@@ -32,7 +38,7 @@ const items = [
   {
     title: "Campaigns",
     href: "/campaigns",
-    icon: Mail,
+    icon: Megaphone,
   },
   {
     title: "Reports",
@@ -50,34 +56,38 @@ export function MainNav() {
   const pathname = usePathname()
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center border-b px-4">
-        <Link href="/" className="flex items-center space-x-2">
-          <MessageCircle className="h-6 w-6" />
-          <span className="font-bold">
-            Omnichannel
-          </span>
-        </Link>
+    <TooltipProvider delayDuration={0}>
+      <div className="flex h-full w-[60px] flex-col border-r">
+        <div className="flex h-14 items-center justify-center border-b">
+          <Link href="/" className="flex items-center">
+            <MessageCircle className="h-6 w-6" />
+          </Link>
+        </div>
+        <div className="flex-1 overflow-auto py-4">
+          <nav className="flex flex-col items-center space-y-3">
+            {items.map((item) => (
+              <Tooltip key={item.href}>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-accent hover:text-accent-foreground",
+                      pathname === item.href
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {item.title}
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </nav>
+        </div>
       </div>
-      <div className="flex-1 overflow-auto">
-        <nav className="flex flex-col space-y-1 px-2 pt-4">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                pathname === item.href
-                  ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground"
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              <span>{item.title}</span>
-            </Link>
-          ))}
-        </nav>
-      </div>
-    </div>
+    </TooltipProvider>
   )
 } 
